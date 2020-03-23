@@ -53,6 +53,9 @@ namespace ImageGallery.Client
 
                    o.Scope.Add("openid");
                    o.Scope.Add("profile");
+                   // call userinfoendpoint to get extra claims 
+                   // this is done to make the IDToken smaller.
+                   o.GetClaimsFromUserInfoEndpoint = true;
 
                    o.SaveTokens = true;
                });
