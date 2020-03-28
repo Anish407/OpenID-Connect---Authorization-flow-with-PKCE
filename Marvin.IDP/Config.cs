@@ -18,7 +18,13 @@ namespace Marvin.IDP
                 new IdentityResources.OpenId(),
                 //Givenname and family name 
                 new IdentityResources.Profile(),
-                new IdentityResources.Address()
+                new IdentityResources.Address(),
+
+                new IdentityResource(
+                    "userrole", // name 
+                    "Role for the user", // name to be displayed 
+                    new List<string> { "role"} // type that will be returned
+                    )
             };
 
         public static IEnumerable<ApiResource> Apis =>
@@ -47,7 +53,10 @@ namespace Marvin.IDP
                   AllowedScopes= {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        IdentityServerConstants.StandardScopes.Address
+                        IdentityServerConstants.StandardScopes.Address,
+
+                        // make the client request for access to the users role claim
+                        "userrole"
                   },
                   ClientSecrets= { new Secret("secret".ToSha256()) }
               }

@@ -66,22 +66,25 @@ namespace ImageGallery.Client
                    //o.Scope.Add("openid");
                    //o.Scope.Add("profile");
                    o.Scope.Add("address");
+                   o.Scope.Add("userrole");
                  
                    //Confusion on why remove is used
                    // this is to remove the nbf from the identity token.
                    //TO make the token smaller remove claims that are not needed.
                    //o.ClaimActions.Remove("nbf");
                    o.ClaimActions.Remove("address");
+                   o.ClaimActions.Remove("role");
                    //o.ClaimActions.Remove("amr");
 
                    //remove from Claims pricipal
                    o.ClaimActions.DeleteClaim("amr");
-                 
 
+                   //To map the newly added claim to claims principal
+                   o.ClaimActions.MapUniqueJsonKey("role", "role");
 
                    // call userinfoendpoint to get extra claims 
                    // this is done to make the IDTcoken smaller.
-                  // o.GetClaimsFromUserInfoEndpoint = true;
+                   o.GetClaimsFromUserInfoEndpoint = true;
 
                    o.SaveTokens = true;
                });
