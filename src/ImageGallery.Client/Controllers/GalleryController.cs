@@ -40,7 +40,9 @@ namespace ImageGallery.Client.Controllers
             var response = await httpClient.SendAsync(
                 request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
-            response.EnsureSuccessStatusCode();
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+              return  RedirectToAction("AccessDenied", "AuthorizationOptions");
 
             using (var responseStream = await response.Content.ReadAsStreamAsync())
             {
