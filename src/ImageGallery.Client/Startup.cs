@@ -51,7 +51,9 @@ namespace ImageGallery.Client
                 o.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 o.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
-               .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+               .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,o=> {
+                   o.AccessDeniedPath = "/AuthorizationOptions/AccessDenied";
+               })
                .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, o =>
                {
                    o.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
