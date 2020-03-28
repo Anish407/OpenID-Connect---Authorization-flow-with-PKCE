@@ -29,7 +29,9 @@ namespace Marvin.IDP
 
         public static IEnumerable<ApiResource> Apis =>
             new ApiResource[]
-            { };
+            {
+              new ApiResource("imageGalleryApi","Image gallery api")
+            };
 
         public static IEnumerable<Client> Clients =>
             new Client[]
@@ -56,7 +58,8 @@ namespace Marvin.IDP
                         IdentityServerConstants.StandardScopes.Address,
 
                         // make the client request for access to the users role claim
-                        "userrole"
+                        "userrole",
+                        "imageGalleryApi"
                   },
                   ClientSecrets= { new Secret("secret".ToSha256()) }
               }

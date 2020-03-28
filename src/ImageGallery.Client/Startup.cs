@@ -71,6 +71,9 @@ namespace ImageGallery.Client
                    //o.Scope.Add("profile");
                    o.Scope.Add("address");
                    o.Scope.Add("userrole");
+
+                   //request access to the api resource
+                   o.Scope.Add("imageGalleryApi");
                  
                    //Confusion on why remove is used
                    // this is to remove the nbf from the identity token.
