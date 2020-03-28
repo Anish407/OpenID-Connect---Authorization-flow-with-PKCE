@@ -24,7 +24,18 @@ namespace Marvin.IDP
                     "userrole", // name 
                     "Role for the user", // name to be displayed 
                     new List<string> { "role"} // type that will be returned
-                    )
+                    ),
+
+                //ABAC
+                new IdentityResource(
+                    "perosonaldetails",
+                    "Achante Perum Naadum",
+                    new List<string>
+                    {
+                        "surname",
+                        "pob"
+                    })
+
             };
 
         public static IEnumerable<ApiResource> Apis =>
@@ -63,7 +74,10 @@ namespace Marvin.IDP
 
                         // make the client request for access to the users role claim
                         "userrole",
-                        "imageGalleryApi"
+                        "imageGalleryApi",
+
+                        //ABAC
+                        "perosonaldetails"
                   },
                   ClientSecrets= { new Secret("secret".ToSha256()) }
               }

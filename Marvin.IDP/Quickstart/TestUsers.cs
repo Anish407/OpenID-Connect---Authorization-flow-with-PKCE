@@ -25,7 +25,11 @@ namespace IdentityServer4.Quickstart.UI
                     new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json),
                    
                     //for rbac, add an extra claim for user role
-                    new Claim("role", "normalUser")
+                    new Claim("role", "normalUser"),
+
+                    //for new policy
+                    new Claim("surname","perera"),
+                    new Claim("pob","oolampara")
                 }
             },
             new TestUser{SubjectId = "88421113", Username = "bob", Password = "bob",
@@ -41,7 +45,11 @@ namespace IdentityServer4.Quickstart.UI
                     new Claim("location", "somewhere"),
 
                     //RBAC
-                    new Claim("role", "payingUser")
+                    new Claim("role", "payingUser"),
+
+                    //ABAC
+                    new Claim("surname","sasi"),
+                    new Claim("pob","kunnamkulam")
                 }
             }
         };

@@ -33,6 +33,15 @@ namespace ImageGallery.Client
             services.AddControllersWithViews()
                  .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
 
+            //Setting up a policy
+            services.AddAuthorization(op =>
+            {
+                op.AddPolicy("fromandsurname",policy=> {
+                    policy.RequireClaim("surname", "sasi", "soman", "chandy");
+                    policy.RequireClaim("pob", "kunnamkulam", "oachira");
+                });
+            });
+
             services.AddHttpContextAccessor();
 
             services.AddTransient<HttpRequestHandler>();
@@ -79,6 +88,9 @@ namespace ImageGallery.Client
                    o.Scope.Add("address");
                    o.Scope.Add("userrole");
 
+                   //ABAC
+                   o.Scope.Add("perosonaldetails");
+
                    //request access to the api resource
                    o.Scope.Add("imageGalleryApi");
                  
@@ -96,6 +108,8 @@ namespace ImageGallery.Client
 
                    //To map the newly added claim to claims principal
                    o.ClaimActions.MapUniqueJsonKey("role", "role");
+                   o.ClaimActions.MapUniqueJsonKey("surname", "surname");
+                   o.ClaimActions.MapUniqueJsonKey("pob", "pob");
 
                    // call userinfoendpoint to get extra claims 
                    // this is done to make the IDTcoken smaller.
