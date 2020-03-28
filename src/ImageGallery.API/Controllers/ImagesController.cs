@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using ImageGallery.API.Services;
 using ImageGallery.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ImageGallery.API.Controllers
 {
@@ -59,10 +61,16 @@ namespace ImageGallery.API.Controllers
         }
 
         [HttpPost()]
+        //Access token will contain roles claim and only paying users will be able to upload an image
+        [Authorize(Roles = "payingUser")]
         public IActionResult CreateImage([FromBody] ImageForCreation imageForCreation)
         {
             // Automapper maps only the Title in our configuration
             var imageEntity = _mapper.Map<Entities.Image>(imageForCreation);
+
+            var userId = User.Claims.FirstOrDefault(i => i.Type=="sub")?.Value;
+
+            imageEntity.OwnerId = userId;
 
             // Create an image from the passed-in bytes (Base64), and 
             // set the filename on the image
