@@ -1,4 +1,5 @@
-﻿using ImageGallery.Client.ViewModels;
+﻿using IdentityModel.Client;
+using ImageGallery.Client.ViewModels;
 using ImageGallery.Model;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -74,6 +75,36 @@ namespace ImageGallery.Client.Controllers
 
                 return View(editImageViewModel);
             }
+        }
+
+        /// <summary>
+        /// Call user info endpoint and get extra claims
+        /// we do this to avoid adding all the claims in the IDToken
+        /// this will make the size of the token large
+        /// Instead we can call the UserInfo endpoint with the access tokens to get the extra claims
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> Sample()
+        {
+            var client = _httpClientFactory.CreateClient("IDPClient");
+
+            var discoverDocument = await client.GetDiscoveryDocumentAsync();
+
+            var token = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+
+            var userInfoRes = await client.GetUserInfoAsync(new UserInfoRequest
+            {
+                Address = discoverDocument.UserInfoEndpoint,
+                Token = token
+            });
+            var clms = User.Claims.ToList();
+
+            var idToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+
+            var claims = userInfoRes.Claims;
+
+
+            return View(claims);
         }
 
         [HttpPost]

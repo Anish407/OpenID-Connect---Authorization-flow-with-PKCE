@@ -1,0 +1,28 @@
+﻿@model IEnumerable<System.Security.Claims.Claim>
+@{
+    ViewData["Title"] = "Sample";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Sample</h2>
+
+
+<table class="table table-striped table-hover">
+    <tr>
+        <td>Claim Type</td>
+        <td>Claim Value</td>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @item.Type
+    </td>
+    <td>
+        @item.Value
+    </td>
+</tr>
+    }
+</table>
+

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ImageGallery.Client
 {
@@ -17,6 +19,8 @@ namespace ImageGallery.Client
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            // to clear default claim type mappings.. 
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -29,6 +33,13 @@ namespace ImageGallery.Client
             services.AddHttpClient("APIClient", client =>
             {
                 client.BaseAddress = new Uri("https://localhost:44366/");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+            });
+
+            services.AddHttpClient("IDPClient", client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44350/");
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
             });
@@ -51,11 +62,26 @@ namespace ImageGallery.Client
                    //we can add this wen we want to change the RedirectUris configured in the IDP
                    //o.CallbackPath = "";
 
-                   o.Scope.Add("openid");
-                   o.Scope.Add("profile");
+                   //Request these from the userinfo endpoint
+                   //o.Scope.Add("openid");
+                   //o.Scope.Add("profile");
+                   o.Scope.Add("address");
+                 
+                   //Confusion on why remove is used
+                   // this is to remove the nbf from the identity token.
+                   //TO make the token smaller remove claims that are not needed.
+                   //o.ClaimActions.Remove("nbf");
+                   o.ClaimActions.Remove("address");
+                   //o.ClaimActions.Remove("amr");
+
+                   //remove from Claims pricipal
+                   o.ClaimActions.DeleteClaim("amr");
+                 
+
+
                    // call userinfoendpoint to get extra claims 
-                   // this is done to make the IDToken smaller.
-                   o.GetClaimsFromUserInfoEndpoint = true;
+                   // this is done to make the IDTcoken smaller.
+                  // o.GetClaimsFromUserInfoEndpoint = true;
 
                    o.SaveTokens = true;
                });
