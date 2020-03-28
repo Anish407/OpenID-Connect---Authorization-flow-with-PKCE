@@ -35,8 +35,19 @@
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Gallery" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Gallery" asp-action="AddImage">Add an image</a></li>
-                    <li><a asp-area="" asp-controller="Gallery" asp-action="Sample">UserInfo Sample</a></li>
-                    
+
+                    @*this will check if the user role is has the value paying user
+                        but we need to configure IsInRole to check against our role claim 
+                        when we use this condition set role name to the role claim name in token validation parameters
+                        This will just hide the button, but we can directly navigate to the address from the browser,
+                        *@ 
+                    @if (User.IsInRole("payingUser"))
+                    {
+                        <li><a asp-area="" asp-controller="Gallery" asp-action="Sample">UserInfo Sample</a></li>
+                    }
+
+
+
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li><a asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>

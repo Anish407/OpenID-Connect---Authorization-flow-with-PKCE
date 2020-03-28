@@ -31,7 +31,7 @@ namespace ImageGallery.Client.Controllers
         public async Task<IActionResult> Index()
         {
             var httpClient = _httpClientFactory.CreateClient("APIClient");
-           await WriteTokenAsync();
+            await WriteTokenAsync();
 
             var request = new HttpRequestMessage(
                 HttpMethod.Get,
@@ -77,6 +77,7 @@ namespace ImageGallery.Client.Controllers
             }
         }
 
+        [Authorize(Roles = "payingUser, sampleUser, admin")]
         /// <summary>
         /// Call user info endpoint and get extra claims
         /// we do this to avoid adding all the claims in the IDToken
@@ -215,11 +216,11 @@ namespace ImageGallery.Client.Controllers
 
         public async Task WriteTokenAsync()
         {
-            var token =await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+            var token = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
 
             Debug.WriteLine("ID token " + token);
 
-            foreach (var item in HttpContext.User.Claims)  Debug.WriteLine($"Name: {item.Type},  value: {item.Value}");
+            foreach (var item in HttpContext.User.Claims) Debug.WriteLine($"Name: {item.Type},  value: {item.Value}");
 
         }
     }

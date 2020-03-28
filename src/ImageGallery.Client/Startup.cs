@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using IdentityModel;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -72,12 +74,13 @@ namespace ImageGallery.Client
                    // this is to remove the nbf from the identity token.
                    //TO make the token smaller remove claims that are not needed.
                    //o.ClaimActions.Remove("nbf");
-                   o.ClaimActions.Remove("address");
-                   o.ClaimActions.Remove("role");
+                   //o.ClaimActions.Remove("address");
+                   //o.ClaimActions.Remove("role");
                    //o.ClaimActions.Remove("amr");
 
                    //remove from Claims pricipal
                    o.ClaimActions.DeleteClaim("amr");
+                   o.ClaimActions.DeleteClaims("s_hash", "sid");
 
                    //To map the newly added claim to claims principal
                    o.ClaimActions.MapUniqueJsonKey("role", "role");
@@ -85,6 +88,16 @@ namespace ImageGallery.Client
                    // call userinfoendpoint to get extra claims 
                    // this is done to make the IDTcoken smaller.
                    o.GetClaimsFromUserInfoEndpoint = true;
+
+
+                   //which checking the roles in the authorize attribute we need to map our custom role to
+                   // the roleclaim type. Else authorizaiton wont work, change to some other value and we can 
+                   //notice that no user is authorized since the role name cudnt be mapped
+                   o.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       //NameClaimType=JwtClaimTypes.GivenName,
+                       RoleClaimType="role"
+                   };
 
                    o.SaveTokens = true;
                });
