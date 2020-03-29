@@ -43,7 +43,7 @@ namespace Marvin.IDP
             {
               new ApiResource(
                   "imageGalleryApi",
-                  "Image gallery api" , 
+                  "Image gallery api" ,
                   new List<string>{ "role"} // these roles will need to be requested when requesting this resource
                   )
             };
@@ -53,6 +53,13 @@ namespace Marvin.IDP
             {
               new Client
               {
+                 // IdentityTokenLifetime=400 secs;
+                 //AuthorizationCodeLifetime=300secs
+                 //AccessTokenLifetime=3600 or 1 hour
+                  AllowOfflineAccess=true,
+                  //AbsoluteRefreshTokenLifetime=1 day
+                  UpdateAccessTokenClaimsOnRefresh=true,
+
                   // this will be displayed on the consent screen
                   ClientName="Image Gallery",
                   ClientId="imagegalleryclient",

@@ -88,6 +88,9 @@ namespace ImageGallery.Client
                    o.Scope.Add("address");
                    o.Scope.Add("userrole");
 
+                   //for refresh token
+                   o.Scope.Add("offline_access");
+
                    //ABAC
                    o.Scope.Add("perosonaldetails");
 
